@@ -1,6 +1,6 @@
 # XFORCE-PWN PUBLIC
 
-Open source XForce 6.8b7 Crack
+Open source XForce 6.9b7 Crack
 
 They be using VirtualProtect to protect several functions - if you just comment it out you'll get a nasty bsod.
 Incase you're on a older ( pre 21h2 ) windows versions returning nothing at NtRaiseHardError won't prevent you from a bsod.
