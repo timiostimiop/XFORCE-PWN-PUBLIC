@@ -23,7 +23,10 @@ BOOL hkVirtualProtect(LPVOID lpAddress, SIZE_T dwSize, DWORD flNewProtect, PDWOR
 }
 
 
+
 BYTE hookBytes[6];
+BYTE oBytes[5];
+
 DWORD WINAPI VPRESTORE()
 {
         while (TRUE)
@@ -31,23 +34,34 @@ DWORD WINAPI VPRESTORE()
             HMODULE ntDll = GetModuleHandleA("ntdll.dll");
             HMODULE k32 = GetModuleHandleA("kernel32.dll");
             HMODULE ntx = GetModuleHandleA("ntdll.dll");
+
+            
             if (ntDll != 0)
             {
                 auto vpAddy = (DWORD64)GetProcAddress(ntDll, "NtProtectVirtualMemory");
                 auto umVpAddy = (DWORD64)GetProcAddress(k32, "VirtualProtect");
                 auto raiseharderror = (DWORD64)GetProcAddress(ntx, "NtRaiseHardError");
 
-                BYTE restoreUsermodeVP2[] =
+            
+               
+
+                BYTE restoreUsermodeVP2_W21_H2[] =
                 {
                 0x48, 0xFF, 0x25, 0xD1, 0x5B
                 };
+
+                BYTE restoreUsermodeW10_2004[] =
+                {
+                0x48, 0xFF, 0x25, 0x19, 0x5c
+                };
+
                 BYTE fixRaiseHardError[] =
                 {
                 0xC3, 0x90, 0x90
                 };
 
-
-                WriteProcessMemory(GetCurrentProcess(), (LPVOID)umVpAddy, &restoreUsermodeVP2, sizeof(restoreUsermodeVP2), NULL);
+                
+                WriteProcessMemory(GetCurrentProcess(), (LPVOID)umVpAddy, &restoreUsermodeVP2_W21_H2, sizeof(restoreUsermodeVP2_W21_H2), NULL);
                 WriteProcessMemory(GetCurrentProcess(), (LPVOID)raiseharderror, &fixRaiseHardError, sizeof(fixRaiseHardError), NULL);
 
             }
@@ -75,6 +89,19 @@ DWORD WINAPI Init()
 {
     AllocConsole();
     freopen("CONOUT$", "w", stdout);
+
+    HMODULE k32 = GetModuleHandleA("kernel32.dll");
+    auto umVpAddy = (DWORD64)GetProcAddress(k32, "VirtualProtect");
+    ReadProcessMemory(GetCurrentProcess(), (void*)umVpAddy, &oBytes, sizeof(oBytes), NULL);
+
+    printf("your restoreUsermodeVP bytes: \n\n");
+
+    for (int i = 0; i < sizeof(oBytes); i++)
+    {
+        printf("0x%x\n", oBytes[i]);
+    }
+
+    Sleep(4000);
     CreateThread(0, 0, (LPTHREAD_START_ROUTINE)&VPRESTORE, 0, 0, 0);
 
     if (MH_Initialize() != MH_OK) { printf(("failed to init mh\n")); return false; }
