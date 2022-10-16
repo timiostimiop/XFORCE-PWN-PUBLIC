@@ -9,6 +9,7 @@ You could improve it by dynamically patching VirtualProtect or just hooking it y
 NOTES FOR LATEST RELEASE:
 Unzip X-Folder to C:\
 Inject X-FORCE-PWN.dll
+
 done.
 
 0. Unzip X-Folder.rar to C:\
