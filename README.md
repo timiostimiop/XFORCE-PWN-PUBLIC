@@ -6,6 +6,11 @@ They be using VirtualProtect to protect several functions - if you just comment 
 Incase you're on a older ( pre 21h2 ) windows versions returning nothing at NtRaiseHardError won't prevent you from a bsod.
 You could improve it by dynamically patching VirtualProtect or just hooking it yourself - I'll leave it up to you.
 
+NOTES FOR LATEST RELEASE:
+Unzip X-Folder to C:\
+Inject X-FORCE-PWN.dll
+done.
+
 0. Unzip X-Folder.rar to C:\
 1. Install Minhook via Nuget
 2. Compile in x64 Release
